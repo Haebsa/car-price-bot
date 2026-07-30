@@ -2,6 +2,7 @@
 {
   "name": "car-price-bot",
   "version": "1.0.0",
+  "type": "module",
   "description": "Car Price Scraper",
   "main": "index.js",
   "scripts": {
