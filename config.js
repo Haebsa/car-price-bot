@@ -1,19 +1,34 @@
+
 module.exports = {
 
-    footer: `
-━━━━━━━━━━━━
-📢 @Khodroo_Akhbar
-`,
+    footer: "\n━━━━━━━━━━━━\n📢 @Khodroo_Akhbar",
 
-    RUBIKA_BOTS: [
+    rubika: [
 
         {
-            name: "قیمت خودرو",
             token: "CABFGI0XPZOLZGBRNVUBSVWJERIIJXRMCOITJBAENARPAUYCGVHBEFJHDXOHEETC",
-            chatId: "@gheymatabshodeh",
+            chatId: "@khodroo_akhbar",
+            channel: "@khodroo_akhbar"
+        }
 
-            // هر چند دقیقه ارسال شود
-            interval: 60
+    ],
+
+    eitaa: [
+
+        {
+            token: "",
+            chatId: "",
+            channel: "@Khodroo_Akhbar"
+        }
+
+    ],
+
+    bale: [
+
+        {
+            token: "",
+            chatId: "",
+            channel: "@Khodroo_Akhbar"
         }
 
     ]
