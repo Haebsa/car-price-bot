@@ -1,1 +1,14 @@
 
+{
+  "name": "car-price-bot",
+  "version": "1.0.0",
+  "description": "Car Price Scraper",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "cheerio": "^1.0.0"
+  }
+}
