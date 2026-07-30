@@ -1,109 +1,131 @@
-import fs from "fs";
-import { getIranJibPrices } from "./sources/iranjib.js";
-import { formatMessage } from "./formatter.js";
+import axios from "axios";
+import * as cheerio from "cheerio";
 
 
-const CURRENT = "./data/cars.json";
-const LAST = "./data/lastCars.json";
-
-
-async function main(){
-
-    console.log("شروع دریافت قیمت خودرو...");
-
-
-    const cars = await getIranJibPrices();
-
-
-    console.log("تعداد خودرو:", cars.length);
-
-
-    fs.writeFileSync(
-        CURRENT,
-        JSON.stringify(cars,null,2),
-        "utf8"
-    );
-
-
-    let oldCars=[];
-
-
-    if(fs.existsSync(LAST)){
-
-        oldCars = JSON.parse(
-            fs.readFileSync(LAST,"utf8")
-        );
-
-    }
-
-
-    const changes = findChanges(oldCars,cars);
-
-
-
-    if(changes.length > 0){
-
-        console.log("تغییر قیمت پیدا شد:");
-
-        const msg = formatMessage(changes);
-
-        console.log(msg);
-
-    }
-    else{
-
-        console.log("تغییری وجود ندارد");
-
-    }
-
-
-
-    fs.writeFileSync(
-        LAST,
-        JSON.stringify(cars,null,2),
-        "utf8"
-    );
-
-
+function faToEn(str) {
+    return str
+        .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+        .replace(/,/g, "")
+        .replace(/٬/g, "")
+        .trim();
 }
 
 
 
-function findChanges(oldCars,newCars){
+export async function getIranJibPrices() {
 
-    let changes=[];
+    try {
 
-
-    newCars.forEach(car=>{
-
-
-        const old = oldCars.find(
-            x =>
-            x.brand === car.brand &&
-            x.name === car.name
+        const { data } = await axios.get(
+            "https://www.iranjib.ir/showgroup/45/",
+            {
+                headers: {
+                    "User-Agent": "Mozilla/5.0"
+                },
+                timeout: 20000
+            }
         );
 
 
-        if(old){
+        const $ = cheerio.load(data);
 
-            if(
-                old.market !== car.market ||
-                old.factory !== car.factory
-            ){
 
-                changes.push(car);
+        const cars = [];
+
+        let brand = "";
+
+
+        $("table.items_table tr").each((i, row) => {
+
+
+            if ($(row).hasClass("catsection")) {
+
+                const title = $(row)
+                    .find("h2")
+                    .text()
+                    .trim();
+
+
+                if (title) {
+                    brand = title;
+                }
+
+                return;
 
             }
 
-        }
-
-    });
 
 
-    return changes;
+            const tds = $(row).find("td");
+
+
+            if (tds.length < 3) return;
+
+
+
+            const name = $(tds[0])
+                .text()
+                .trim();
+
+
+            const marketText = $(tds[1])
+                .text()
+                .trim();
+
+
+            const factoryText = $(tds[2])
+                .text()
+                .trim();
+
+
+
+            if (!name) return;
+
+
+
+            cars.push({
+
+                brand,
+
+                name,
+
+                market:
+                    Number(faToEn(marketText))
+                    || null,
+
+
+                factory:
+                    Number(faToEn(factoryText))
+                    || null,
+
+
+                marketText,
+
+                factoryText
+
+            });
+
+
+        });
+
+
+
+        console.log("تعداد استخراج:", cars.length);
+
+
+        return cars;
+
+
+
+    } catch (err) {
+
+        console.error(
+            "IranJib Error:",
+            err.message
+        );
+
+        return [];
+
+    }
 
 }
-
-
-
-main();
