@@ -1,6 +1,8 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
+
 const { buildMessage } = require("./formatter");
+const { sendRubika } = require("./sendRubika");
 
 function faToEn(str) {
     return str
@@ -33,7 +35,9 @@ async function getIranJibCars() {
 
             const title = $(row).find("h2").text().trim();
 
-            if (title) brand = title;
+            if (title) {
+                brand = title;
+            }
 
             return;
         }
@@ -59,13 +63,31 @@ async function getIranJibCars() {
 
     });
 
-    // خروجی JSON (برای تست)
-    console.log(JSON.stringify(cars, null, 2));
-
-    // خروجی متن نهایی
-    console.log("\n================ MESSAGE ================\n");
-    console.log(buildMessage(cars));
+    return cars;
 
 }
 
-getIranJibCars();
+async function main() {
+
+    try {
+
+        const cars = await getIranJibCars();
+
+        const message = buildMessage(cars);
+
+        console.log(message);
+
+        await sendRubika(message);
+
+        console.log("✅ پیام با موفقیت ارسال شد.");
+
+    } catch (err) {
+
+        console.error("❌ خطا:");
+        console.error(err);
+
+    }
+
+}
+
+main();
