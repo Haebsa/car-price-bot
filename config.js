@@ -9,7 +9,7 @@ module.exports = {
 
         {
             name: "قیمت خودرو",
-            token: "توکن",
+            token: "CABFGI0XPZOLZGBRNVUBSVWJERIIJXRMCOITJBAENARPAUYCGVHBEFJHDXOHEETC",
             chatId: "@gheymatabshodeh",
 
             // هر چند دقیقه ارسال شود
