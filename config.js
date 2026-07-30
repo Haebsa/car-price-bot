@@ -1,47 +1,32 @@
-
-export const CONFIG = {
-
-    sources: {
-
-        iranjib: true,
-
-        hamrahmechanic: true,
-
-        bama: true,
-
-        divar: false
-
-    },
-
-    timeout: 20000
-
-};
 module.exports = {
+
+  sources: {
+    iranjib: true,
+    hamrahmechanic: true,
+    bama: true,
+    divar: false
+  },
+
+  timeout: 20000,
 
   footer: `
 ━━━━━━━━━━━━
 📢 @Khodroo_Akhbar
 `,
 
-  rubika: [
+  RUBIKA_BOTS: [
     {
-      token: "...",
-      chatId: "@channel1"
+      token: "توکن_ربات",
+      chatId: "@gheymatabshodeh"
     }
   ],
 
-  eitaa: [
-    {
-      token: "...",
-      chatId: "@channel2"
-    }
+  EITAA_BOTS: [
+    // بعداً
   ],
 
-  bale: [
-    {
-      token: "...",
-      chatId: "@channel3"
-    }
+  BALE_BOTS: [
+    // بعداً
   ]
 
 };
