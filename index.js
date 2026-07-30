@@ -1,6 +1,6 @@
-
 const axios = require("axios");
 const cheerio = require("cheerio");
+const { buildMessage } = require("./formatter");
 
 function faToEn(str) {
     return str
@@ -30,8 +30,11 @@ async function getIranJibCars() {
     $("table.items_table tr").each((i, row) => {
 
         if ($(row).hasClass("catsection")) {
+
             const title = $(row).find("h2").text().trim();
+
             if (title) brand = title;
+
             return;
         }
 
@@ -56,7 +59,12 @@ async function getIranJibCars() {
 
     });
 
+    // خروجی JSON (برای تست)
     console.log(JSON.stringify(cars, null, 2));
+
+    // خروجی متن نهایی
+    console.log("\n================ MESSAGE ================\n");
+    console.log(buildMessage(cars));
 
 }
 
