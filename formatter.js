@@ -1,4 +1,4 @@
-const LRM = "\u200E";
+const RLM = "\u200F";
 
 function formatPrice(price, text) {
 
@@ -33,8 +33,7 @@ function buildMessages(cars) {
 
             brandCars.forEach(car => {
 
-                const name = `${LRM}${car.name}${LRM}`;
-
+const name = `${RLM}${car.name}${RLM}`;
                 const factory = formatPrice(car.factory, car.factoryText);
                 const market = formatPrice(car.market, car.marketText);
 
