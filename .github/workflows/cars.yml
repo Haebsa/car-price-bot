@@ -1,19 +1,25 @@
 name: Car Price Bot
 
 on:
+  schedule:
+    - cron: "*/10 * * * *"
   workflow_dispatch:
 
 jobs:
-  test:
+  scraper:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 22
 
-      - run: npm install
+      - name: Install packages
+        run: npm install
 
-      - run: node main.js
+      - name: Run bot
+        run: npm start
