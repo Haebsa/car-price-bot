@@ -1,32 +1,21 @@
 module.exports = {
 
-  sources: {
-    iranjib: true,
-    hamrahmechanic: true,
-    bama: true,
-    divar: false
-  },
-
-  timeout: 20000,
-
-  footer: `
+    footer: `
 ━━━━━━━━━━━━
 📢 @Khodroo_Akhbar
 `,
 
-  RUBIKA_BOTS: [
-    {
-      token: "توکن_ربات",
-      chatId: "@gheymatabshodeh"
-    }
-  ],
+    RUBIKA_BOTS: [
 
-  EITAA_BOTS: [
-    // بعداً
-  ],
+        {
+            name: "قیمت خودرو",
+            token: "توکن",
+            chatId: "@gheymatabshodeh",
 
-  BALE_BOTS: [
-    // بعداً
-  ]
+            // هر چند دقیقه ارسال شود
+            interval: 60
+        }
+
+    ]
 
 };
