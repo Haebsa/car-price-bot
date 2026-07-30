@@ -2,8 +2,7 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 
 const { buildMessage } = require("./formatter");
-const { sendRubika } = require("./sendRubika");
-
+const { sendRubika } = require("./senders/sendRubika");
 function faToEn(str) {
     return str
         .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
