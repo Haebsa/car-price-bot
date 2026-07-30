@@ -72,8 +72,11 @@ async function main() {
 
         const cars = await getIranJibCars();
 
-        const message = buildMessage(cars);
+const messages = buildMessages(cars);
 
+for (const msg of messages) {
+    await sendRubika(msg);
+}
         console.log(message);
 
         await sendRubika(message);
