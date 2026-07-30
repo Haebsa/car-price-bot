@@ -6,7 +6,7 @@ function formatNumber(price) {
 
 }
 
-function buildMessage(cars){
+function buildMessages(cars){
 
     let text = "🚗 قیمت روز خودرو\n\n";
 
