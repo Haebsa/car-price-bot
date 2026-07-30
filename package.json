@@ -1,1 +1,15 @@
-// packag
+{
+  "name": "car-price-bot",
+  "version": "1.0.0",
+  "description": "Car Price Scraper",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "dependencies": {
+    "axios": "^1.11.0",
+    "cheerio": "^1.1.2",
+    "playwright": "^1.55.0"
+  }
+}
