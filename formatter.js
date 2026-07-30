@@ -1,60 +1,59 @@
-function formatPrice(value, text) {
-    if (value === null || isNaN(value)) return text;
+const LRM = "\u200E";
 
-    return (value / 1000000000).toFixed(3);
-}
+function formatPrice(price, text) {
 
-function carLine(car) {
+    if (price === null || isNaN(price)) {
+        return text || "---";
+    }
 
-    const market = formatPrice(car.market, car.marketText);
-    const factory = formatPrice(car.factory, car.factoryText);
+    return (price / 1000000000).toFixed(3);
 
-    return `${car.name}  🏭${factory}  💵${market}`;
 }
 
 function buildMessages(cars) {
 
-    let msg1 = "🚗 قیمت روز خودرو\n\n";
-    let msg2 = "🚗 ادامه قیمت روز خودرو\n\n";
+    const messages = [];
 
-    let current = "";
+    const groups = [
+        ["ایران خودرو", "سایپا"],
+        ["مدیران خودرو", "کرمان موتور", "بهمن موتور", "سایر شرکت ها"]
+    ];
 
-    cars.forEach(car => {
+    groups.forEach(groupBrands => {
 
-        if (car.brand !== current) {
+        let msg = "🚗 قیمت روز خودرو\n\n";
 
-            current = car.brand;
+        groupBrands.forEach(brand => {
 
-            const title = `🏭 ${current}\n\n`;
+            const brandCars = cars.filter(c => c.brand === brand);
 
-            if (
-                current === "ایران خودرو" ||
-                current === "سایپا"
-            ) {
-                msg1 += title;
-            } else {
-                msg2 += title;
-            }
-        }
+            if (!brandCars.length) return;
 
-        const line = carLine(car) + "\n";
+            msg += `🏭 ${brand}\n\n`;
 
-        if (
-            car.brand === "ایران خودرو" ||
-            car.brand === "سایپا"
-        ) {
-            msg1 += line;
-        } else {
-            msg2 += line;
-        }
+            brandCars.forEach(car => {
+
+                const name = `${LRM}${car.name}${LRM}`;
+
+                const factory = formatPrice(car.factory, car.factoryText);
+                const market = formatPrice(car.market, car.marketText);
+
+                msg += `${name}  🏭${factory}  💵${market}\n`;
+
+            });
+
+            msg += "\n";
+
+        });
+
+        messages.push(msg);
 
     });
 
-    msg1 += "\n━━━━━━━━━━━━\n📢 @Khodroo_Akhbar";
-    msg2 += "\n━━━━━━━━━━━━\n📢 @Khodroo_Akhbar";
-
-    return [msg1, msg2];
+    return messages;
 
 }
 
-module.exports = { buildMessages };
+module.exports = {
+    buildMessages
+};
