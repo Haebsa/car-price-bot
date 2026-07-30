@@ -12,7 +12,7 @@ async function sendRubika(message) {
                 url,
                 {
                     chat_id: bot.chatId,
-                    text: message
+text: message + "\n━━━━━━━━━━━━\n📢 " + bot.channel
                 },
                 {
                     headers: {
