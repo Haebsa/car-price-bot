@@ -14,33 +14,15 @@ export async function getIranJibPrices() {
             timeout: 20000
         });
 
-
         const $ = cheerio.load(response.data);
 
+        console.log("Title:", $("title").text());
 
-        const cars = [];
-
-
-        // اینجا همان کد استخراج قبلی قرار می‌گیرد
-        // که خروجی می‌سازد:
-        //
-        // brand
-        // name
-        // market
-        // factory
-        // marketText
-        // factoryText
-
-
-        return cars;
-
+        return [];
 
     } catch (err) {
 
-        console.error(
-            "IranJib Error:",
-            err.message
-        );
+        console.error("IranJib Error:", err.message);
 
         return [];
 
