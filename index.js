@@ -1,62 +1,114 @@
-const axios = require("axios");
-const cheerio = require("cheerio");
+const fs = require("fs");
 
-function faToEn(str) {
-    return str
-        .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
-        .replace(/,/g, "")
-        .replace(/٬/g, "")
-        .trim();
-}
+const { getCars } = require("./scraper");
+const { formatMessage } = require("./formatter");
+// const { sendMessage } = require("./sender");
 
-async function getIranJibCars() {
 
-    const { data } = await axios.get(
-        "https://www.iranjib.ir/showgroup/45/",
-        {
-            headers: {
-                "User-Agent": "Mozilla/5.0"
-            }
-        }
+const CURRENT = "./data/cars.json";
+const LAST = "./data/lastCars.json";
+
+
+async function main(){
+
+    console.log("شروع دریافت قیمت خودرو...");
+
+
+    // دریافت از ایران جیب
+    const cars = await getCars();
+
+
+    // ذخیره قیمت فعلی
+    fs.writeFileSync(
+        CURRENT,
+        JSON.stringify(cars,null,2),
+        "utf8"
     );
 
-    const $ = cheerio.load(data);
 
-    const cars = [];
+    let oldCars=[];
 
-    let brand = "";
 
-    $("table.items_table tr").each((i, row) => {
+    if(fs.existsSync(LAST)){
 
-        if ($(row).hasClass("catsection")) {
-            const title = $(row).find("h2").text().trim();
-            if (title) brand = title;
-            return;
+        oldCars = JSON.parse(
+            fs.readFileSync(LAST,"utf8")
+        );
+
+    }
+
+
+    // مقایسه
+    const changes = findChanges(oldCars,cars);
+
+
+    if(changes.length){
+
+        console.log("تغییر قیمت پیدا شد:");
+
+        const msg = formatMessage(changes);
+
+        console.log(msg);
+
+        // بعداً ارسال فعال می‌شود
+        // await sendMessage(msg);
+
+    }
+    else{
+
+        console.log("تغییری وجود ندارد");
+
+    }
+
+
+
+    // انتقال قیمت جدید به قبلی
+    fs.writeFileSync(
+        LAST,
+        JSON.stringify(cars,null,2),
+        "utf8"
+    );
+
+
+}
+
+
+
+function findChanges(oldCars,newCars){
+
+    let result=[];
+
+
+    newCars.forEach(car=>{
+
+
+        let old = oldCars.find(
+            x =>
+            x.brand===car.brand &&
+            x.name===car.name
+        );
+
+
+        if(old){
+
+            if(
+                old.market !== car.market ||
+                old.factory !== car.factory
+            ){
+
+                result.push(car);
+
+            }
+
         }
-
-        const tds = $(row).find("td");
-
-        if (tds.length < 3) return;
-
-        const name = $(tds[0]).text().trim();
-        const marketText = $(tds[1]).text().trim();
-        const factoryText = $(tds[2]).text().trim();
-
-        if (!name) return;
-
-        cars.push({
-            brand,
-            name,
-            market: Number(faToEn(marketText)) || null,
-            factory: Number(faToEn(factoryText)) || null,
-            marketText,
-            factoryText
-        });
 
     });
 
-    console.log(JSON.stringify(cars, null, 2));
+
+    return result;
 
 }
 
-getIranJibCars();
+
+
+main();
