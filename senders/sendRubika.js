@@ -9,7 +9,7 @@ async function sendRubika(message) {
 
             const url = `https://botapi.rubika.ir/v3/${bot.token}/sendMessage`;
 
-            const response = await axios.post(
+            const { data } = await axios.post(
                 url,
                 {
                     chat_id: bot.chatId,
@@ -22,18 +22,17 @@ async function sendRubika(message) {
                 }
             );
 
-            console.log("✅ ارسال شد به:", bot.chatId);
-            console.log(response.data);
+            console.log("✅ Rubika:");
+            console.log(data);
 
         } catch (err) {
 
-            console.log("❌ خطا در ارسال به:", bot.chatId);
+            console.log("❌ Rubika Error");
 
-            if (err.response) {
+            if (err.response)
                 console.log(err.response.data);
-            } else {
+            else
                 console.log(err.message);
-            }
 
         }
 
@@ -41,6 +40,4 @@ async function sendRubika(message) {
 
 }
 
-module.exports = {
-    sendRubika
-};
+module.exports = { sendRubika };
