@@ -1,3 +1,4 @@
+//index
 const fs = require("fs");
 
 const { getCars } = require("./scraper");
