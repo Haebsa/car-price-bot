@@ -1,6 +1,4 @@
 const axios = require("axios");
-
-// config.js را می‌خواند
 const { RUBIKA_BOTS } = require("./config");
 
 async function sendRubika(message) {
@@ -9,29 +7,33 @@ async function sendRubika(message) {
 
         try {
 
-            const url =
-                `https://botapi.rubika.ir/v3/${bot.token}/sendMessage`;
+            const url = `https://botapi.rubika.ir/v3/${bot.token}/sendMessage`;
 
-            const res = await axios.post(url, {
-                chat_id: bot.chatId,
-                text: message
-            });
-
-            console.log(
-                `✅ ارسال شد -> ${bot.chatId}`,
-                res.data
+            const response = await axios.post(
+                url,
+                {
+                    chat_id: bot.chatId,
+                    text: message
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
             );
+
+            console.log("✅ ارسال شد به:", bot.chatId);
+            console.log(response.data);
 
         } catch (err) {
 
-            console.log(
-                `❌ خطا برای ${bot.chatId}`
-            );
+            console.log("❌ خطا در ارسال به:", bot.chatId);
 
-            if (err.response)
+            if (err.response) {
                 console.log(err.response.data);
-            else
+            } else {
                 console.log(err.message);
+            }
 
         }
 
@@ -39,4 +41,6 @@ async function sendRubika(message) {
 
 }
 
-module.exports = { sendRubika };
+module.exports = {
+    sendRubika
+};
