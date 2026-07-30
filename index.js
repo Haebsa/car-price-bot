@@ -1,7 +1,7 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 
-const { buildMessage } = require("./formatter");
+const { buildMessages } = require("./formatter");
 const { sendRubika } = require("./senders/sendRubika");
 function faToEn(str) {
     return str
@@ -70,13 +70,14 @@ async function main() {
 
     try {
 
-        const cars = await getIranJibCars();
 
 const messages = buildMessages(cars);
 
-for (const msg of messages) {
-    await sendRubika(msg);
-}
+for (const message of messages) {
+
+    console.log(message);
+
+    await sendRubika(message);
         console.log(message);
 
         await sendRubika(message);
