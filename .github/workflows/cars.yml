@@ -2,7 +2,7 @@ name: Car Price Bot
 
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "0 * * * *"   # هر یک ساعت
   workflow_dispatch:
 
 jobs:
@@ -10,16 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Install packages
-        run: npm install
+      - run: npm install
 
-      - name: Run bot
-        run: npm start
+      - run: npm start
