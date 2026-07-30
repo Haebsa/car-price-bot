@@ -3,6 +3,7 @@ const cheerio = require("cheerio");
 
 const { buildMessages } = require("./formatter");
 const { sendRubika } = require("./senders/sendRubika");
+
 function faToEn(str) {
     return str
         .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
@@ -25,7 +26,6 @@ async function getIranJibCars() {
     const $ = cheerio.load(data);
 
     const cars = [];
-
     let brand = "";
 
     $("table.items_table tr").each((i, row) => {
@@ -34,9 +34,7 @@ async function getIranJibCars() {
 
             const title = $(row).find("h2").text().trim();
 
-            if (title) {
-                brand = title;
-            }
+            if (title) brand = title;
 
             return;
         }
@@ -63,26 +61,25 @@ async function getIranJibCars() {
     });
 
     return cars;
-
 }
 
 async function main() {
 
     try {
 
+        const cars = await getIranJibCars();
 
-const messages = buildMessages(cars);
+        const messages = buildMessages(cars);
 
-for (const message of messages) {
+        for (const message of messages) {
 
-    console.log(message);
+            console.log(message);
 
-    await sendRubika(message);
-        console.log(message);
+            await sendRubika(message);
 
-        await sendRubika(message);
+        }
 
-        console.log("✅ پیام با موفقیت ارسال شد.");
+        console.log("✅ همه پیام‌ها ارسال شدند.");
 
     } catch (err) {
 
