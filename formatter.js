@@ -1,38 +1,60 @@
-function formatNumber(price) {
+function formatPrice(value, text) {
+    if (value === null || isNaN(value)) return text;
 
-    if (price == null) return "-";
-
-    return (price / 1000000000).toFixed(3);
-
+    return (value / 1000000000).toFixed(3);
 }
 
-function buildMessages(cars){
+function carLine(car) {
 
-    let text = "🚗 قیمت روز خودرو\n\n";
+    const market = formatPrice(car.market, car.marketText);
+    const factory = formatPrice(car.factory, car.factoryText);
 
-    let currentBrand = "";
+    return `${car.name}  🏭${factory}  💵${market}`;
+}
 
-    cars.forEach(car=>{
+function buildMessages(cars) {
 
-        if(car.brand !== currentBrand){
+    let msg1 = "🚗 قیمت روز خودرو\n\n";
+    let msg2 = "🚗 ادامه قیمت روز خودرو\n\n";
 
-            currentBrand = car.brand;
+    let current = "";
 
-            text += "🏭 " + currentBrand + "\n\n";
+    cars.forEach(car => {
 
+        if (car.brand !== current) {
+
+            current = car.brand;
+
+            const title = `🏭 ${current}\n\n`;
+
+            if (
+                current === "ایران خودرو" ||
+                current === "سایپا"
+            ) {
+                msg1 += title;
+            } else {
+                msg2 += title;
+            }
         }
 
-        const factory = car.factory == null ? car.factoryText : formatNumber(car.factory);
-        const market  = car.market == null ? car.marketText : formatNumber(car.market);
+        const line = carLine(car) + "\n";
 
-        text += `${car.name}  🏭${factory}  💵${market}\n`;
+        if (
+            car.brand === "ایران خودرو" ||
+            car.brand === "سایپا"
+        ) {
+            msg1 += line;
+        } else {
+            msg2 += line;
+        }
 
     });
 
-    return text;
+    msg1 += "\n━━━━━━━━━━━━\n📢 @Khodroo_Akhbar";
+    msg2 += "\n━━━━━━━━━━━━\n📢 @Khodroo_Akhbar";
+
+    return [msg1, msg2];
 
 }
 
-module.exports = {
-    buildMessage
-};
+module.exports = { buildMessages };
