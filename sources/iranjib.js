@@ -1,4 +1,3 @@
-// IranJib Scraper
 import axios from "axios";
 import * as cheerio from "cheerio";
 
@@ -15,15 +14,33 @@ export async function getIranJibPrices() {
             timeout: 20000
         });
 
+
         const $ = cheerio.load(response.data);
 
-        console.log("Title:", $("title").text());
 
-        return [];
+        const cars = [];
+
+
+        // اینجا همان کد استخراج قبلی قرار می‌گیرد
+        // که خروجی می‌سازد:
+        //
+        // brand
+        // name
+        // market
+        // factory
+        // marketText
+        // factoryText
+
+
+        return cars;
+
 
     } catch (err) {
 
-        console.error("IranJib Error:", err.message);
+        console.error(
+            "IranJib Error:",
+            err.message
+        );
 
         return [];
 
