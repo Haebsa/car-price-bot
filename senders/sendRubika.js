@@ -1,6 +1,5 @@
 const axios = require("axios");
-const { RUBIKA_BOTS } = require("./config");
-
+const { RUBIKA_BOTS } = require("../config");
 async function sendRubika(message) {
 
     for (const bot of RUBIKA_BOTS) {
