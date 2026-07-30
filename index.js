@@ -1,9 +1,6 @@
-//index
-const fs = require("fs");
-
-const { getCars } = require("./scraper");
-const { formatMessage } = require("./formatter");
-// const { sendMessage } = require("./sender");
+import fs from "fs";
+import { getIranJibPrices } from "./sources/iranjib.js";
+import { formatMessage } from "./formatter.js";
 
 
 const CURRENT = "./data/cars.json";
@@ -15,11 +12,12 @@ async function main(){
     console.log("شروع دریافت قیمت خودرو...");
 
 
-    // دریافت از ایران جیب
-    const cars = await getCars();
+    const cars = await getIranJibPrices();
 
 
-    // ذخیره قیمت فعلی
+    console.log("تعداد خودرو:", cars.length);
+
+
     fs.writeFileSync(
         CURRENT,
         JSON.stringify(cars,null,2),
@@ -39,20 +37,17 @@ async function main(){
     }
 
 
-    // مقایسه
     const changes = findChanges(oldCars,cars);
 
 
-    if(changes.length){
+
+    if(changes.length > 0){
 
         console.log("تغییر قیمت پیدا شد:");
 
         const msg = formatMessage(changes);
 
         console.log(msg);
-
-        // بعداً ارسال فعال می‌شود
-        // await sendMessage(msg);
 
     }
     else{
@@ -63,7 +58,6 @@ async function main(){
 
 
 
-    // انتقال قیمت جدید به قبلی
     fs.writeFileSync(
         LAST,
         JSON.stringify(cars,null,2),
@@ -77,16 +71,16 @@ async function main(){
 
 function findChanges(oldCars,newCars){
 
-    let result=[];
+    let changes=[];
 
 
     newCars.forEach(car=>{
 
 
-        let old = oldCars.find(
+        const old = oldCars.find(
             x =>
-            x.brand===car.brand &&
-            x.name===car.name
+            x.brand === car.brand &&
+            x.name === car.name
         );
 
 
@@ -97,7 +91,7 @@ function findChanges(oldCars,newCars){
                 old.factory !== car.factory
             ){
 
-                result.push(car);
+                changes.push(car);
 
             }
 
@@ -106,7 +100,7 @@ function findChanges(oldCars,newCars){
     });
 
 
-    return result;
+    return changes;
 
 }
 
